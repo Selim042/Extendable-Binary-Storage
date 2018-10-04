@@ -1,4 +1,4 @@
-package us.myles_selim.bss;
+package us.myles_selim.ebs;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
