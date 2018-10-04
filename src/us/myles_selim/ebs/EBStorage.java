@@ -1,33 +1,35 @@
 package us.myles_selim.ebs;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class EBStorage {
 
-	private final Map<Integer, DataType<?>> dataTypes = new ConcurrentHashMap<>();
+	private final Map<Integer, DataType<?>> dataTypes = new HashMap<>();
 
 	private final Map<String, Object> data = new ConcurrentHashMap<>();
 
 	public EBStorage() {
 		int simpleId = 0;
-		registerType(simpleId++, new DataTypeBoolean());
-		registerType(simpleId++, new DataTypeByte());
-		registerType(simpleId++, new DataTypeCharacter());
-		registerType(simpleId++, new DataTypeDouble());
-		registerType(simpleId++, new DataTypeFloat());
-		registerType(simpleId++, new DataTypeInteger());
-		registerType(simpleId++, new DataTypeLong());
-		registerType(simpleId++, new DataTypeShort());
-		registerType(simpleId++, new DataTypeString());
+		registerType(simpleId++, new DataTypeBoolean()); // 0
+		registerType(simpleId++, new DataTypeByte()); // 1
+		registerType(simpleId++, new DataTypeCharacter()); // 2
+		registerType(simpleId++, new DataTypeDouble()); // 3
+		registerType(simpleId++, new DataTypeFloat());// 4
+		registerType(simpleId++, new DataTypeInteger());// 5
+		registerType(simpleId++, new DataTypeLong());// 6
+		registerType(simpleId++, new DataTypeShort());// 7
+		registerType(simpleId++, new DataTypeString());// 8
 	}
 
-	public void registerType(int id, DataType<?> dataType) {
+	public EBStorage registerType(int id, DataType<?> dataType) {
 		if (dataTypes.containsKey(id))
 			throw new IllegalArgumentException("data type with id " + id + " is already registered: "
 					+ dataTypes.get(id).getClass().getName());
 		dataTypes.put(id, dataType);
+		return this;
 	}
 
 	public void set(String name, Object value) {
