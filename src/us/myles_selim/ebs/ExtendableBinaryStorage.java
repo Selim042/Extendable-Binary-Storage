@@ -3,7 +3,7 @@ package us.myles_selim.ebs;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class BinaryStorageSystem {
+public class ExtendableBinaryStorage {
 
 	private static final Map<Integer, Class<? extends DataType<?>>> DATA_TYPES = new ConcurrentHashMap<>();
 
