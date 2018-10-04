@@ -17,8 +17,8 @@ public abstract class DataType<V> {
 		return false;
 	}
 
-	public abstract void toBytes(Storage buf);
+	public abstract void toBytes(Storage stor);
 
-	public abstract void fromBytes(Storage but);
+	public abstract void fromBytes(Storage stor);
 
 }
