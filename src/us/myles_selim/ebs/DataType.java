@@ -1,7 +1,5 @@
 package us.myles_selim.ebs;
 
-import java.nio.ByteBuffer;
-
 public abstract class DataType<V> {
 
 	public abstract V getValue();
@@ -12,15 +10,15 @@ public abstract class DataType<V> {
 
 	public abstract Class<?>[] accepts();
 
-	public boolean acceptsThis(Object value) {
+	public boolean acceptsValue(Object value) {
 		for (Class<?> c : accepts())
 			if (c != null && c.isInstance(value))
 				return true;
 		return false;
 	}
 
-	public abstract void toBytes(ByteBuffer buf);
+	public abstract void toBytes(Storage buf);
 
-	public abstract void fromBytes(ByteBuffer but);
+	public abstract void fromBytes(Storage but);
 
 }

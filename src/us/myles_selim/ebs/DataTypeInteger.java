@@ -1,7 +1,5 @@
 package us.myles_selim.ebs;
 
-import java.nio.ByteBuffer;
-
 public class DataTypeInteger extends DataType<Integer> {
 
 	private int value;
@@ -24,7 +22,7 @@ public class DataTypeInteger extends DataType<Integer> {
 
 	@Override
 	protected void setValueObject(Object value) {
-		if (this.acceptsThis(value))
+		if (this.acceptsValue(value))
 			this.value = (int) value;
 	}
 
@@ -34,24 +32,23 @@ public class DataTypeInteger extends DataType<Integer> {
 	}
 
 	@Override
-	public void toBytes(ByteBuffer buf) {
-		buf.putInt(this.value);
+	public void toBytes(Storage ebs) {
+		ebs.writeInt(this.value);
 	}
 
 	@Override
-	public void fromBytes(ByteBuffer buf) {
-		this.value = buf.getInt();
+	public void fromBytes(Storage ebs) {
+		this.value = ebs.readInt();
 	}
 
 	public static void main(String... args) {
 		DataTypeInteger int1 = new DataTypeInteger(5);
 		System.out.println("int1 value: " + int1.getValue());
-		ByteBuffer buffer = ByteBuffer.allocate(1000);
-		int1.toBytes(buffer);
-		buffer.position(0);
+		Storage storage = new Storage();
+		int1.toBytes(storage);
 		DataTypeInteger int2 = new DataTypeInteger(2);
 		System.out.println("int2 init value: " + int2.getValue());
-		int2.fromBytes(buffer);
+		int2.fromBytes(storage);
 		System.out.println("int2 read value: " + int2.getValue());
 	}
 
