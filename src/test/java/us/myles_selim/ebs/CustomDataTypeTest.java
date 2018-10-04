@@ -52,7 +52,7 @@ class CustomDataTypeTest {
 	}
 
 	public static void main(String... args) {
-		EBStorage storage = new EBStorage().registerType(9, new DataTypeCustomData());
+		EBStorage storage = new EBStorage().registerType(new DataTypeCustomData());
 		storage.set("customData", new CustomData(42));
 		CustomData dat = storage.get("customData", CustomData.class);
 		System.out.println(dat.test);

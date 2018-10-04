@@ -8,8 +8,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class EBStorage {
 
 	private final Map<Integer, DataType<?>> dataTypes = new HashMap<>();
-
 	private final Map<String, Object> data = new ConcurrentHashMap<>();
+	private int next = 0;
 
 	public EBStorage() {
 		int simpleId = 0;
@@ -24,12 +24,23 @@ public class EBStorage {
 		registerType(simpleId++, new DataTypeString());// 8
 	}
 
-	public EBStorage registerType(int id, DataType<?> dataType) {
+	private EBStorage registerType(int id, DataType<?> dataType) {
 		if (dataTypes.containsKey(id))
 			throw new IllegalArgumentException("data type with id " + id + " is already registered: "
 					+ dataTypes.get(id).getClass().getName());
 		dataTypes.put(id, dataType);
 		return this;
+	}
+
+	public EBStorage registerType(DataType<?> dataType) {
+		int id = getUnusedInt();
+		return registerType(id, dataType);
+	}
+
+	private int getUnusedInt() {
+		while (dataTypes.containsKey(next))
+			next++;
+		return next;
 	}
 
 	public void set(String name, Object value) {
