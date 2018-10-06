@@ -106,6 +106,10 @@ public class Storage {
 	}
 
 	public void writeString(String val) {
+		if (val == null) {
+			writeInt(0);
+			return;
+		}
 		char[] arr = val.toCharArray();
 		writeInt(arr.length);
 		for (char c : arr)
