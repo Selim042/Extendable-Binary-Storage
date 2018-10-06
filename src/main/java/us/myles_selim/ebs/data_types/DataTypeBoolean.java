@@ -1,5 +1,6 @@
 package us.myles_selim.ebs.data_types;
 
+import us.myles_selim.ebs.DataType;
 import us.myles_selim.ebs.Storage;
 
 public class DataTypeBoolean extends DataType<Boolean> {
@@ -41,17 +42,6 @@ public class DataTypeBoolean extends DataType<Boolean> {
 	@Override
 	public void fromBytes(Storage ebs) {
 		this.value = ebs.readBoolean();
-	}
-
-	public static void main(String... args) {
-		DataTypeBoolean bool1 = new DataTypeBoolean(true);
-		System.out.println("bool1 value: " + bool1.getValue());
-		Storage storage = new Storage();
-		bool1.toBytes(storage);
-		DataTypeBoolean bool2 = new DataTypeBoolean(false);
-		System.out.println("bool2 init value: " + bool2.getValue());
-		bool2.fromBytes(storage);
-		System.out.println("bool2 read value: " + bool2.getValue());
 	}
 
 }

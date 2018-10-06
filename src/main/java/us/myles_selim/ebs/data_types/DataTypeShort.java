@@ -1,5 +1,6 @@
 package us.myles_selim.ebs.data_types;
 
+import us.myles_selim.ebs.DataType;
 import us.myles_selim.ebs.Storage;
 
 public class DataTypeShort extends DataType<Short> {
@@ -41,17 +42,6 @@ public class DataTypeShort extends DataType<Short> {
 	@Override
 	public void fromBytes(Storage ebs) {
 		this.value = ebs.readShort();
-	}
-
-	public static void main(String... args) {
-		DataTypeShort short1 = new DataTypeShort((short) 5);
-		System.out.println("short1 value: " + short1.getValue());
-		Storage storage = new Storage();
-		short1.toBytes(storage);
-		DataTypeShort short2 = new DataTypeShort((short) -2);
-		System.out.println("short2 init value: " + short2.getValue());
-		short2.fromBytes(storage);
-		System.out.println("short2 read value: " + short2.getValue());
 	}
 
 }

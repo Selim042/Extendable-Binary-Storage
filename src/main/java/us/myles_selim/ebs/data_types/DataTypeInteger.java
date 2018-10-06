@@ -1,5 +1,6 @@
 package us.myles_selim.ebs.data_types;
 
+import us.myles_selim.ebs.DataType;
 import us.myles_selim.ebs.Storage;
 
 public class DataTypeInteger extends DataType<Integer> {
@@ -41,17 +42,6 @@ public class DataTypeInteger extends DataType<Integer> {
 	@Override
 	public void fromBytes(Storage ebs) {
 		this.value = ebs.readInt();
-	}
-
-	public static void main(String... args) {
-		DataTypeInteger int1 = new DataTypeInteger(5);
-		System.out.println("int1 value: " + int1.getValue());
-		Storage storage = new Storage();
-		int1.toBytes(storage);
-		DataTypeInteger int2 = new DataTypeInteger(2);
-		System.out.println("int2 init value: " + int2.getValue());
-		int2.fromBytes(storage);
-		System.out.println("int2 read value: " + int2.getValue());
 	}
 
 }

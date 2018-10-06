@@ -1,7 +1,5 @@
 package us.myles_selim.ebs;
 
-import us.myles_selim.ebs.data_types.DataType;
-
 class CustomDataTypeTest {
 
 	private static class CustomData {
