@@ -5,11 +5,20 @@ import java.util.List;
 
 public class Storage {
 
-	private final List<Byte> data = new ArrayList<>();
+	private final List<Byte> data;
 	private int writePos = 0;
 	private int readPos = 0;
 
-	protected Storage() {}
+	protected Storage() {
+		this.data = new ArrayList<>();
+	}
+
+	protected Storage(byte[] data) {
+		this();
+		if (data != null)
+			for (byte b : data)
+				this.data.add(b);
+	}
 
 	public void writeBoolean(boolean val) {
 		if (val)

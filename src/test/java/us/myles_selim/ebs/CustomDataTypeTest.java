@@ -16,6 +16,8 @@ class CustomDataTypeTest {
 
 		private CustomData data;
 
+		public DataTypeCustomData() {}
+
 		@Override
 		public CustomData getValue() {
 			return this.data;
@@ -28,7 +30,8 @@ class CustomDataTypeTest {
 
 		@Override
 		protected void setValueObject(Object value) {
-			return;
+			if (value instanceof CustomData)
+				this.data = (CustomData) value;
 		}
 
 		@Override
