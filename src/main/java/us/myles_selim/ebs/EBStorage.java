@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
-import us.myles_selim.ebs.data_types.DataType;
 import us.myles_selim.ebs.data_types.DataTypeBoolean;
 import us.myles_selim.ebs.data_types.DataTypeByte;
 import us.myles_selim.ebs.data_types.DataTypeCharacter;
