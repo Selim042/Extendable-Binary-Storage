@@ -173,30 +173,4 @@ public class EBStorage {
 		return null;
 	}
 
-	public static void main(String... args) {
-		EBStorage storage = new EBStorage().registerPrimitives();
-		// storage.set("testString", "Hello, World");
-		// System.out.println(storage.get("testString"));
-		// System.out.println((String) storage.get("testString"));
-		// System.out.println(storage.get("testString", String.class));
-
-		// try {
-		// byte[] serialized = storage.serialize();
-		// FileOutputStream out = new FileOutputStream("testFile.ebs");
-		// out.write(serialized);
-		// out.close();
-		// } catch (IOException e) {
-		// e.printStackTrace();
-		// }
-
-		storage.set("testInt", 5);
-		storage.set("string", "bleh");
-		storage.set("testDouble", 123.455);
-		byte[] serialized = storage.serialize();
-		EBStorage storage2 = EBStorage.deserialize(serialized);
-		System.out.println(storage2.get("testInt"));
-		System.out.println(storage2.get("string"));
-		System.out.println(storage2.get("testDouble"));
-	}
-
 }
