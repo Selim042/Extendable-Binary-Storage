@@ -14,14 +14,14 @@ public class IOTest {
 
 		byte[] serializedWrite = storage.serialize();
 		try {
-			FileOutputStream out = new FileOutputStream("testFile.ebs");
+			FileOutputStream out = new FileOutputStream("ioTest.ebs");
 			out.write(serializedWrite);
 			out.close();
 		} catch (IOException e) {}
 
 		byte[] serializedRead = null;
 		try {
-			FileInputStream in = new FileInputStream("testFile.ebs");
+			FileInputStream in = new FileInputStream("ioTest.ebs");
 			serializedRead = new byte[in.available()];
 			in.read(serializedRead);
 			in.close();
