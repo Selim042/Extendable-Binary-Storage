@@ -7,6 +7,17 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+import us.myles_selim.ebs.data_types.DataType;
+import us.myles_selim.ebs.data_types.DataTypeBoolean;
+import us.myles_selim.ebs.data_types.DataTypeByte;
+import us.myles_selim.ebs.data_types.DataTypeCharacter;
+import us.myles_selim.ebs.data_types.DataTypeDouble;
+import us.myles_selim.ebs.data_types.DataTypeFloat;
+import us.myles_selim.ebs.data_types.DataTypeInteger;
+import us.myles_selim.ebs.data_types.DataTypeLong;
+import us.myles_selim.ebs.data_types.DataTypeShort;
+import us.myles_selim.ebs.data_types.DataTypeString;
+
 public class EBStorage {
 
 	private final Map<Integer, DataType<?>> dataTypes = new HashMap<>();

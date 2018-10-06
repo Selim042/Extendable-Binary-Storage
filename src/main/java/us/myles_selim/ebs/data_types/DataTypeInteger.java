@@ -1,4 +1,6 @@
-package us.myles_selim.ebs;
+package us.myles_selim.ebs.data_types;
+
+import us.myles_selim.ebs.Storage;
 
 public class DataTypeInteger extends DataType<Integer> {
 
