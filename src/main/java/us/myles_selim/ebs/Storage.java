@@ -124,7 +124,21 @@ public class Storage {
 		return v;
 	}
 
-	public byte[] getByteArray() {
+	public void writeByteArray(byte[] val) {
+		writeInt(val.length);
+		for (byte b : val)
+			writeByte(b);
+	}
+
+	public byte[] readByteArray() {
+		int length = readInt();
+		byte[] ret = new byte[length];
+		for (int i = 0; i < length; i++)
+			ret[i] = readByte();
+		return ret;
+	}
+
+	public byte[] getAsByteArray() {
 		byte[] vals = new byte[data.size()];
 		for (int i = 0; i < vals.length; i++)
 			vals[i] = data.get(i);
@@ -152,7 +166,7 @@ public class Storage {
 		d.writeString("Hello World!");
 		System.out.println(d.readString());
 		System.out.print("[");
-		byte[] data = d.getByteArray();
+		byte[] data = d.getAsByteArray();
 		for (int i = 0; i < data.length; i++)
 			System.out.print(data[i] + (i == data.length - 1 ? "" : ","));
 		System.out.println("]");

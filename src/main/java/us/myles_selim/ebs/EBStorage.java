@@ -9,8 +9,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import us.myles_selim.ebs.data_types.DataTypeBoolean;
 import us.myles_selim.ebs.data_types.DataTypeByte;
+import us.myles_selim.ebs.data_types.DataTypeByteArray;
 import us.myles_selim.ebs.data_types.DataTypeCharacter;
 import us.myles_selim.ebs.data_types.DataTypeDouble;
+import us.myles_selim.ebs.data_types.DataTypeEBStorage;
 import us.myles_selim.ebs.data_types.DataTypeFloat;
 import us.myles_selim.ebs.data_types.DataTypeInteger;
 import us.myles_selim.ebs.data_types.DataTypeLong;
@@ -35,6 +37,8 @@ public class EBStorage {
 		registerType(new DataTypeLong()); // 6
 		registerType(new DataTypeShort()); // 7
 		registerType(new DataTypeString()); // 8
+		registerType(new DataTypeByteArray()); // 9
+		registerType(new DataTypeEBStorage()); // 10
 		return this;
 	}
 
@@ -114,7 +118,7 @@ public class EBStorage {
 			storage.writeString(e.getKey());
 			e.getValue().toBytes(storage);
 		}
-		return storage.getByteArray();
+		return storage.getAsByteArray();
 	}
 
 	public static EBStorage deserialize(byte[] data) {
