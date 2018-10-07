@@ -2,6 +2,8 @@ package us.myles_selim.ebs;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -93,6 +95,10 @@ public class EBStorage {
 		if (data.containsKey(name))
 			return type.cast(data.get(name).getValue());
 		return null;
+	}
+
+	public Collection<String> getKeys() {
+		return Collections.unmodifiableCollection(this.data.keySet());
 	}
 
 	public boolean acceptsValue(Object obj) {
