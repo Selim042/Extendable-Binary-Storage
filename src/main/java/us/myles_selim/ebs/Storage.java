@@ -138,6 +138,20 @@ public class Storage {
 		return ret;
 	}
 
+	public void writeIntArray(int[] val) {
+		writeInt(val.length);
+		for (int i : val)
+			writeInt(i);
+	}
+
+	public int[] readIntArray() {
+		int length = readInt();
+		int[] ret = new int[length];
+		for (int i = 0; i < length; i++)
+			ret[i] = readInt();
+		return ret;
+	}
+
 	public byte[] getAsByteArray() {
 		byte[] vals = new byte[data.size()];
 		for (int i = 0; i < vals.length; i++)

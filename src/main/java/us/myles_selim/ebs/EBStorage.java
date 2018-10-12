@@ -16,6 +16,7 @@ import us.myles_selim.ebs.data_types.DataTypeCharacter;
 import us.myles_selim.ebs.data_types.DataTypeDouble;
 import us.myles_selim.ebs.data_types.DataTypeEBStorage;
 import us.myles_selim.ebs.data_types.DataTypeFloat;
+import us.myles_selim.ebs.data_types.DataTypeIntArray;
 import us.myles_selim.ebs.data_types.DataTypeInteger;
 import us.myles_selim.ebs.data_types.DataTypeLong;
 import us.myles_selim.ebs.data_types.DataTypeShort;
@@ -41,6 +42,7 @@ public class EBStorage {
 		registerType(new DataTypeString()); // 8
 		registerType(new DataTypeByteArray()); // 9
 		registerType(new DataTypeEBStorage()); // 10
+		registerType(new DataTypeIntArray()); // 11
 		return this;
 	}
 
