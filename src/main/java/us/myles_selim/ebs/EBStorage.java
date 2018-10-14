@@ -94,13 +94,15 @@ public class EBStorage {
 	}
 
 	public <T> T get(String name, Class<T> type) {
-		if (data.containsKey(name))
-			return type.cast(data.get(name).getValue());
-		return null;
+		return type.cast(get(name));
 	}
 
 	public Collection<String> getKeys() {
 		return Collections.unmodifiableCollection(this.data.keySet());
+	}
+
+	public boolean containsKey(String key) {
+		return this.data.containsKey(key);
 	}
 
 	public boolean acceptsValue(Object obj) {
@@ -163,13 +165,12 @@ public class EBStorage {
 		return valid ? ebs : null;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "unchecked" })
 	private <T> DataType<T> getDataType(T val) {
 		for (Entry<Integer, DataType<?>> e : dataTypes.entrySet()) {
 			if (e.getValue().acceptsValue(val)) {
 				try {
-					Constructor<? extends DataType> construct = e.getValue().getClass().getConstructor();
-					DataType<?> newData = construct.newInstance();
+					DataType<?> newData = e.getValue().getClass().getConstructor().newInstance();
 					newData.setValueObject(val);
 					return (DataType<T>) newData;
 				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
