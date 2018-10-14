@@ -28,6 +28,8 @@ public class Storage {
 	}
 
 	public boolean readBoolean() {
+		if (readPos > data.size())
+			return false;
 		byte b = data.get(readPos++);
 		if (b == 0)
 			return false;
@@ -39,6 +41,8 @@ public class Storage {
 	}
 
 	public byte readByte() {
+		if (readPos > data.size())
+			return 0;
 		return data.get(readPos++);
 	}
 
@@ -56,6 +60,8 @@ public class Storage {
 	}
 
 	public short readShort() {
+		if (readPos + 2 > data.size())
+			return 0;
 		return (short) ((0xff & data.get(readPos++)) << 8 | (0xff & data.get(readPos++)));
 	}
 
@@ -67,6 +73,8 @@ public class Storage {
 	}
 
 	public int readInt() {
+		if (readPos + 4 > data.size())
+			return 0;
 		return ((0xff & data.get(readPos++)) << 24 | (0xff & data.get(readPos++)) << 16
 				| (0xff & data.get(readPos++)) << 8 | (0xff & data.get(readPos++)));
 	}
@@ -83,6 +91,8 @@ public class Storage {
 	}
 
 	public long readLong() {
+		if (readPos + 8 > data.size())
+			return 0;
 		return ((long) (0xFF & data.get(readPos++)) << 56 | (long) (0xFF & data.get(readPos++)) << 48
 				| (long) (0xFF & data.get(readPos++)) << 40 | (long) (0xFF & data.get(readPos++)) << 32
 				| (long) (0xFF & data.get(readPos++)) << 24 | (long) (0xFF & data.get(readPos++)) << 16
@@ -118,6 +128,8 @@ public class Storage {
 
 	public String readString() {
 		int length = readInt();
+		if (length == 0)
+			return null;
 		String v = "";
 		for (int i = 0; i < length; i++)
 			v += readChar();
