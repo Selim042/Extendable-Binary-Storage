@@ -45,4 +45,27 @@ public class IOHelper {
 		return EBStorage.deserialize(serializedRead);
 	}
 
+	public static boolean writeEBList(EBList<?, ?> list, File file) {
+		byte[] ser = list.serialize();
+		try {
+			FileOutputStream out = new FileOutputStream(file);
+			out.write(ser);
+			out.close();
+			return true;
+		} catch (IOException e) {
+			return false;
+		}
+	}
+
+	public static <W, T extends DataType<W>> EBList<W, T> readEBList(File file) {
+		byte[] ser = null;
+		try {
+			FileInputStream in = new FileInputStream(file);
+			ser = new byte[in.available()];
+			in.read(ser);
+			in.close();
+		} catch (IOException e) {}
+		return EBList.deserialize(ser);
+	}
+
 }
