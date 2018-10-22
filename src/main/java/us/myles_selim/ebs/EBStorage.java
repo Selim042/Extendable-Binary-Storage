@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+import us.myles_selim.ebs.callbacks.OnWriteCallback;
 import us.myles_selim.ebs.data_types.DataTypeBoolean;
 import us.myles_selim.ebs.data_types.DataTypeByte;
 import us.myles_selim.ebs.data_types.DataTypeByteArray;
@@ -83,8 +84,10 @@ public class EBStorage {
 	}
 
 	public void set(String name, Object value) {
-		if (acceptsValue(value))
+		if (acceptsValue(value)) {
 			data.put(name, getDataType(value));
+			callOnWrite();
+		}
 	}
 
 	public Object get(String name) {
@@ -129,6 +132,17 @@ public class EBStorage {
 			e.getValue().toBytes(storage);
 		}
 		return storage.getAsByteArray();
+	}
+
+	private OnWriteCallback onWriteCallback;
+
+	private void callOnWrite() {
+		if (this.onWriteCallback != null)
+			this.onWriteCallback.onWrite();
+	}
+
+	public void setOnWriteCallback(OnWriteCallback onWrite) {
+		this.onWriteCallback = onWrite;
 	}
 
 	public static EBStorage deserialize(byte[] data) {

@@ -3,9 +3,15 @@ package us.myles_selim.ebs;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
+
+import us.myles_selim.ebs.callbacks.OnWriteCallback;
 
 public class EBList<W, T extends DataType<W>> extends ArrayList<T> {
 
@@ -26,8 +32,93 @@ public class EBList<W, T extends DataType<W>> extends ArrayList<T> {
 				| IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			return false;
 		}
-		inst.setValue(wrapped);
 		return this.add(inst);
+	}
+
+	@Override
+	public T set(int index, T element) {
+		T val = super.set(index, element);
+		this.callOnWrite();
+		return val;
+	}
+
+	@Override
+	public boolean add(T e) {
+		boolean val = super.add(e);
+		this.callOnWrite();
+		return val;
+	}
+
+	@Override
+	public void add(int index, T element) {
+		super.add(index, element);
+		this.callOnWrite();
+	}
+
+	@Override
+	public T remove(int index) {
+		T val = super.remove(index);
+		this.callOnWrite();
+		return val;
+	}
+
+	@Override
+	public boolean remove(Object o) {
+		boolean val = super.remove(o);
+		this.callOnWrite();
+		return val;
+	}
+
+	@Override
+	public void clear() {
+		super.clear();
+		this.callOnWrite();
+	}
+
+	@Override
+	public boolean addAll(Collection<? extends T> c) {
+		boolean val = super.addAll(c);
+		this.callOnWrite();
+		return val;
+	}
+
+	@Override
+	public boolean addAll(int index, Collection<? extends T> c) {
+		boolean val = super.addAll(index, c);
+		this.callOnWrite();
+		return val;
+	}
+
+	@Override
+	protected void removeRange(int fromIndex, int toIndex) {
+		super.removeRange(fromIndex, toIndex);
+		this.callOnWrite();
+	}
+
+	@Override
+	public boolean removeAll(Collection<?> c) {
+		boolean val = super.removeAll(c);
+		this.callOnWrite();
+		return val;
+	}
+
+	@Override
+	public boolean removeIf(Predicate<? super T> filter) {
+		boolean val = super.removeIf(filter);
+		this.callOnWrite();
+		return val;
+	}
+
+	@Override
+	public void replaceAll(UnaryOperator<T> operator) {
+		super.replaceAll(operator);
+		this.callOnWrite();
+	}
+
+	@Override
+	public void sort(Comparator<? super T> c) {
+		super.sort(c);
+		this.callOnWrite();
 	}
 
 	public List<W> values() {
@@ -44,6 +135,17 @@ public class EBList<W, T extends DataType<W>> extends ArrayList<T> {
 		for (T t : this)
 			t.toBytes(storage);
 		return storage.getAsByteArray();
+	}
+
+	private OnWriteCallback onWriteCallback;
+
+	private void callOnWrite() {
+		if (this.onWriteCallback != null)
+			this.onWriteCallback.onWrite();
+	}
+
+	public void setOnWriteCallback(OnWriteCallback onWrite) {
+		this.onWriteCallback = onWrite;
 	}
 
 	public static <W, T extends DataType<W>> EBList<W, T> deserialize(byte[] data) {

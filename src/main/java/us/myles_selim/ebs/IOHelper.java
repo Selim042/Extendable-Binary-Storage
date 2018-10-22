@@ -3,11 +3,19 @@ package us.myles_selim.ebs;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 
 public class IOHelper {
 
 	public static final String EBS_EXTENSION = ".ebs";
+	public static final FilenameFilter FILE_FILTER = new FilenameFilter() {
+
+		@Override
+		public boolean accept(File dir, String name) {
+			return name.endsWith(IOHelper.EBS_EXTENSION);
+		}
+	};
 
 	/**
 	 * Writes the given EBStorage to the given File
