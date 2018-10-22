@@ -141,8 +141,9 @@ public class EBStorage {
 			this.onWriteCallback.onWrite();
 	}
 
-	public void setOnWriteCallback(OnWriteCallback onWrite) {
+	public EBStorage setOnWriteCallback(OnWriteCallback onWrite) {
 		this.onWriteCallback = onWrite;
+		return this;
 	}
 
 	public static EBStorage deserialize(byte[] data) {

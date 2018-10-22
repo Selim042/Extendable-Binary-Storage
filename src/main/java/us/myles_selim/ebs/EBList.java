@@ -144,8 +144,9 @@ public class EBList<W, T extends DataType<W>> extends ArrayList<T> {
 			this.onWriteCallback.onWrite();
 	}
 
-	public void setOnWriteCallback(OnWriteCallback onWrite) {
+	public EBList<W, T> setOnWriteCallback(OnWriteCallback onWrite) {
 		this.onWriteCallback = onWrite;
+		return this;
 	}
 
 	public static <W, T extends DataType<W>> EBList<W, T> deserialize(byte[] data) {
