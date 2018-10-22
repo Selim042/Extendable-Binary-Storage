@@ -25,8 +25,23 @@ public class DataTypeShort extends DataType<Short> {
 
 	@Override
 	protected void setValueObject(Object value) {
-		if (this.acceptsValue(value))
+		if (value instanceof String) {
+			try {
+				this.value = Short.valueOf((String) value);
+			} catch (NumberFormatException e) {}
+		} else if (this.acceptsValue(value))
 			this.value = (short) value;
+	}
+
+	@Override
+	public boolean acceptsValue(Object value) {
+		if (value instanceof String)
+			try {
+				Short.valueOf((String) value);
+			} catch (NumberFormatException e) {
+				return false;
+			}
+		return super.acceptsValue(value);
 	}
 
 	@Override

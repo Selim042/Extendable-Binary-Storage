@@ -25,8 +25,30 @@ public class DataTypeBoolean extends DataType<Boolean> {
 
 	@Override
 	protected void setValueObject(Object value) {
-		if (this.acceptsValue(value))
+		if (value instanceof String)
+			switch (((String) value).toLowerCase()) {
+			case "true":
+				this.value = true;
+			case "false":
+				this.value = false;
+			default:
+				break;
+			}
+		else if (this.acceptsValue(value))
 			this.value = (boolean) value;
+	}
+
+	@Override
+	public boolean acceptsValue(Object value) {
+		if (value instanceof String)
+			switch (((String) value).toLowerCase()) {
+			case "true":
+			case "false":
+				return true;
+			default:
+				break;
+			}
+		return super.acceptsValue(value);
 	}
 
 	@Override

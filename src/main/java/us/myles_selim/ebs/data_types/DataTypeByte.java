@@ -25,8 +25,23 @@ public class DataTypeByte extends DataType<Byte> {
 
 	@Override
 	protected void setValueObject(Object value) {
-		if (this.acceptsValue(value))
+		if (value instanceof String) {
+			try {
+				this.value = Byte.valueOf((String) value);
+			} catch (NumberFormatException e) {}
+		} else if (this.acceptsValue(value))
 			this.value = (byte) value;
+	}
+
+	@Override
+	public boolean acceptsValue(Object value) {
+		if (value instanceof String)
+			try {
+				Byte.valueOf((String) value);
+			} catch (NumberFormatException e) {
+				return false;
+			}
+		return super.acceptsValue(value);
 	}
 
 	@Override

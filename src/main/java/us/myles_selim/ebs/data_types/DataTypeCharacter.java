@@ -25,8 +25,17 @@ public class DataTypeCharacter extends DataType<Character> {
 
 	@Override
 	protected void setValueObject(Object value) {
-		if (this.acceptsValue(value))
+		if (value instanceof String)
+			this.value = ((String) value).charAt(0);
+		else if (this.acceptsValue(value))
 			this.value = (char) value;
+	}
+
+	@Override
+	public boolean acceptsValue(Object value) {
+		if (value instanceof String)
+			return ((String) value).length() == 1;
+		return super.acceptsValue(value);
 	}
 
 	@Override

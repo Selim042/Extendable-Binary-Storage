@@ -25,8 +25,23 @@ public class DataTypeLong extends DataType<Long> {
 
 	@Override
 	protected void setValueObject(Object value) {
-		if (this.acceptsValue(value))
+		if (value instanceof String) {
+			try {
+				this.value = Long.valueOf((String) value);
+			} catch (NumberFormatException e) {}
+		} else if (this.acceptsValue(value))
 			this.value = (long) value;
+	}
+
+	@Override
+	public boolean acceptsValue(Object value) {
+		if (value instanceof String)
+			try {
+				Long.valueOf((String) value);
+			} catch (NumberFormatException e) {
+				return false;
+			}
+		return super.acceptsValue(value);
 	}
 
 	@Override

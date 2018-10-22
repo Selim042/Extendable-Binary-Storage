@@ -25,8 +25,23 @@ public class DataTypeInteger extends DataType<Integer> {
 
 	@Override
 	protected void setValueObject(Object value) {
-		if (this.acceptsValue(value))
+		if (value instanceof String) {
+			try {
+				this.value = Integer.valueOf((String) value);
+			} catch (NumberFormatException e) {}
+		} else if (this.acceptsValue(value))
 			this.value = (int) value;
+	}
+
+	@Override
+	public boolean acceptsValue(Object value) {
+		if (value instanceof String)
+			try {
+				Integer.valueOf((String) value);
+			} catch (NumberFormatException e) {
+				return false;
+			}
+		return super.acceptsValue(value);
 	}
 
 	@Override
