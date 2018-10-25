@@ -133,8 +133,11 @@ public class EBList<W, T extends DataType<W>> extends ArrayList<T> {
 		Storage storage = new Storage();
 		storage.writeString(type.getClass().getName());
 		storage.writeInt(this.size());
-		for (T t : this)
+		for (T t : this) {
+			storage.setLengthMarker();
 			t.toBytes(storage);
+			storage.writeLengthMarker();
+		}
 		return storage.getAsByteArray();
 	}
 
@@ -161,14 +164,21 @@ public class EBList<W, T extends DataType<W>> extends ArrayList<T> {
 			T typeInstance = construct.newInstance();
 			EBList<W, T> list = new EBList<>(typeInstance);
 			for (int i = 0; i < numValues; i++) {
+				if (storage.getVersion() > 0) {
+					int length = storage.readInt();
+					storage.setReadDistance(length);
+				}
 				T newInstance = construct.newInstance();
 				newInstance.fromBytes(storage);
+				if (storage.getVersion() > 0)
+					storage.clearReadDistance();
 				list.add(newInstance);
 			}
 			return list;
 		} catch (ClassNotFoundException | NoSuchMethodException | SecurityException
 				| InstantiationException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
+			e.printStackTrace();
 			return null;
 		}
 	}

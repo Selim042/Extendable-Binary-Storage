@@ -49,7 +49,9 @@ public class IOHelper {
 			serializedRead = new byte[in.available()];
 			in.read(serializedRead);
 			in.close();
-		} catch (IOException e) {}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return EBStorage.deserialize(serializedRead);
 	}
 

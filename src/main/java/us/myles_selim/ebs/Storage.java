@@ -5,19 +5,50 @@ import java.util.List;
 
 public class Storage {
 
+	public static final int CURRENT_VERSION = 1;
+
+	private static final String HEADER = "[EBS]";
+
 	private final List<Byte> data;
+	private int version;
 	private int writePos = 0;
-	private int readPos = 0;
+	int readPos = 0;
+
+	private int maxReadMarker = -1;
+	private int markerPos = -1;
 
 	protected Storage() {
 		this.data = new ArrayList<>();
+		this.version = CURRENT_VERSION;
+		writeInt(this.version);
+		writeString(HEADER);
+		this.readPos = 8 + (HEADER.length() * 2);
 	}
 
 	protected Storage(byte[] data) {
-		this();
+		this.data = new ArrayList<>();
 		if (data != null)
 			for (byte b : data)
 				this.data.add(b);
+		this.version = readInt();
+		int headerLength = readInt();
+		if (headerLength != HEADER.length())
+			this.version = 0;
+		switch (this.version) {
+		case 0:
+			this.readPos = 0;
+			break;
+		case 1:
+			this.readPos = 8 + (HEADER.length() * 2);
+			break;
+		default:
+			throw new IllegalArgumentException(
+					"version " + this.version + " is not supported in this build");
+		}
+	}
+
+	public int getVersion() {
+		return this.version;
 	}
 
 	public void writeBoolean(boolean val) {
@@ -28,7 +59,7 @@ public class Storage {
 	}
 
 	public boolean readBoolean() {
-		if (readPos > data.size())
+		if (readPos > data.size() || (maxReadMarker != -1 && readPos > maxReadMarker))
 			return false;
 		byte b = data.get(readPos++);
 		if (b == 0)
@@ -41,7 +72,7 @@ public class Storage {
 	}
 
 	public byte readByte() {
-		if (readPos > data.size())
+		if (readPos > data.size() || (maxReadMarker != -1 && readPos > maxReadMarker))
 			return 0;
 		return data.get(readPos++);
 	}
@@ -60,7 +91,7 @@ public class Storage {
 	}
 
 	public short readShort() {
-		if (readPos + 2 > data.size())
+		if (readPos + 2 > data.size() || (maxReadMarker != -1 && readPos + 2 > maxReadMarker))
 			return 0;
 		return (short) ((0xff & data.get(readPos++)) << 8 | (0xff & data.get(readPos++)));
 	}
@@ -73,7 +104,7 @@ public class Storage {
 	}
 
 	public int readInt() {
-		if (readPos + 4 > data.size())
+		if (readPos + 4 > data.size() || (maxReadMarker != -1 && readPos + 4 > maxReadMarker))
 			return 0;
 		return ((0xff & data.get(readPos++)) << 24 | (0xff & data.get(readPos++)) << 16
 				| (0xff & data.get(readPos++)) << 8 | (0xff & data.get(readPos++)));
@@ -91,7 +122,7 @@ public class Storage {
 	}
 
 	public long readLong() {
-		if (readPos + 8 > data.size())
+		if (readPos + 8 > data.size() || (maxReadMarker != -1 && readPos + 8 > maxReadMarker))
 			return 0;
 		return ((long) (0xFF & data.get(readPos++)) << 56 | (long) (0xFF & data.get(readPos++)) << 48
 				| (long) (0xFF & data.get(readPos++)) << 40 | (long) (0xFF & data.get(readPos++)) << 32
@@ -171,6 +202,37 @@ public class Storage {
 		return vals;
 	}
 
+	protected void setReadDistance(int dist) {
+		this.maxReadMarker = this.readPos + dist - 4;
+	}
+
+	protected void clearReadDistance() {
+		this.readPos = this.maxReadMarker;
+		this.maxReadMarker = -1;
+	}
+
+	protected void setLengthMarker() {
+		this.markerPos = this.writePos;
+		this.writeInt(10);
+	}
+
+	protected boolean writeLengthMarker() {
+		if (this.markerPos == -1)
+			return false;
+		int oldPos = this.writePos;
+		this.writePos = this.markerPos;
+
+		int length = oldPos - this.markerPos;
+		data.set(writePos++, (byte) ((length >> 24) & 0xff));
+		data.set(writePos++, (byte) ((length >> 16) & 0xff));
+		data.set(writePos++, (byte) ((length >> 8) & 0xff));
+		data.set(writePos++, (byte) ((length) & 0xff));
+
+		this.writePos = oldPos;
+		this.markerPos = -1;
+		return true;
+	}
+
 	public static void main(String... args) {
 		Storage d = new Storage();
 		d.writeInt(2);
@@ -191,12 +253,14 @@ public class Storage {
 		System.out.println(d.readFloat());
 		d.writeString("Hello World!");
 		System.out.println(d.readString());
+
 		System.out.print("[");
 		byte[] data = d.getAsByteArray();
 		for (int i = 0; i < data.length; i++)
 			System.out.print(data[i] + (i == data.length - 1 ? "" : ","));
 		System.out.println("]");
 		System.out.println(getHex(data));
+		System.out.println("Version: " + d.getVersion());
 	}
 
 	private static final String HEXES = "0123456789ABCDEF";

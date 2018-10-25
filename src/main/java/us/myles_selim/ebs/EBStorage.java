@@ -124,12 +124,14 @@ public class EBStorage {
 		}
 		storage.writeInt(data.size());
 		for (Entry<String, DataType<?>> e : data.entrySet()) {
+			storage.setLengthMarker();
 			int id = getTypeId(e.getValue());
 			if (id == -1)
 				return null;
 			storage.writeInt(id);
 			storage.writeString(e.getKey());
 			e.getValue().toBytes(storage);
+			storage.writeLengthMarker();
 		}
 		return storage.getAsByteArray();
 	}
@@ -162,12 +164,17 @@ public class EBStorage {
 			} catch (ClassNotFoundException | NoSuchMethodException | SecurityException
 					| InstantiationException | IllegalAccessException | IllegalArgumentException
 					| InvocationTargetException e) {
+				e.printStackTrace();
 				valid = false;
 				break;
 			}
 		}
 		int numData = storage.readInt();
 		for (int i = 0; i < numData; i++) {
+			if (storage.getVersion() > 0) {
+				int length = storage.readInt();
+				storage.setReadDistance(length);
+			}
 			int id = storage.readInt();
 			DataType<?> newType = getNewDataType(ebs.getType(id));
 			if (newType == null) {
@@ -176,6 +183,8 @@ public class EBStorage {
 			}
 			ebs.data.put(storage.readString(), newType);
 			newType.fromBytes(storage);
+			if (storage.getVersion() > 0)
+				storage.clearReadDistance();
 		}
 		return valid ? ebs : null;
 	}
