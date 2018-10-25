@@ -28,6 +28,7 @@ public class EBList<W, T extends DataType<W>> extends ArrayList<T> {
 			@SuppressWarnings("unchecked")
 			Constructor<T> construct = (Constructor<T>) type.getClass().getConstructor();
 			inst = construct.newInstance();
+			inst.setValue(wrapped);
 		} catch (NoSuchMethodException | SecurityException | InstantiationException
 				| IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			return false;
