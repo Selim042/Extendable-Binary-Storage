@@ -9,6 +9,7 @@ import java.io.IOException;
 public class IOHelper {
 
 	public static final String EBS_EXTENSION = ".ebs";
+	public static final String EBS_LIST_EXTENSION = ".ebl";
 	public static final FilenameFilter FILE_FILTER = new FilenameFilter() {
 
 		@Override
