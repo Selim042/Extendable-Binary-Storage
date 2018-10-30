@@ -122,6 +122,33 @@ public class EBList<W, T extends DataType<W>> extends ArrayList<T> {
 		this.callOnWrite();
 	}
 
+	@Override
+	public boolean contains(Object o) {
+		return super.contains(o) || containsWrapped(o);
+	}
+
+	public boolean containsWrapped(Object o) {
+		for (T t : this)
+			if (t == o || (t != null && t.getValue().equals(o)))
+				return true;
+		return false;
+	}
+
+	@Override
+	public boolean containsAll(Collection<?> c) {
+		for (Object o : c)
+			if (!contains(o) && !containsWrapped(o))
+				return false;
+		return true;
+	}
+
+	public boolean containsAllWrapped(Collection<?> c) {
+		for (Object o : c)
+			if (!containsWrapped(o))
+				return false;
+		return true;
+	}
+
 	public List<W> values() {
 		List<W> vals = new LinkedList<>();
 		for (T t : this)
