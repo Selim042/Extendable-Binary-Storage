@@ -22,12 +22,12 @@ public class V1Test {
 		System.out.println(stor1.get("inw"));
 
 		System.out.println("\n--EBList--");
-		EBList<String, DataTypeString> list = new EBList<>(new DataTypeString());
+		EBList<String> list = new EBList<>(new DataTypeString());
 		list.addWrapped("Hello ");
 		list.addWrapped("World!");
 
-		EBList<String, DataTypeString> list2 = EBList.deserialize(list.serialize());
-		for (DataTypeString i : list2)
+		EBList<String> list2 = EBList.deserialize(list.serialize());
+		for (DataType<String> i : list2)
 			System.out.println(i.getValue());
 	}
 

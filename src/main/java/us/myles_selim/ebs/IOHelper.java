@@ -56,7 +56,7 @@ public class IOHelper {
 		return EBStorage.deserialize(serializedRead);
 	}
 
-	public static boolean writeEBList(EBList<?, ?> list, File file) {
+	public static boolean writeEBList(EBList<?> list, File file) {
 		byte[] ser = list.serialize();
 		try {
 			FileOutputStream out = new FileOutputStream(file);
@@ -68,7 +68,7 @@ public class IOHelper {
 		}
 	}
 
-	public static <W, T extends DataType<W>> EBList<W, T> readEBList(File file) {
+	public static <W> EBList<W> readEBList(File file) {
 		byte[] ser = null;
 		try {
 			FileInputStream in = new FileInputStream(file);

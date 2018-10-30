@@ -9,12 +9,12 @@ public class EBListTest {
 	public static void main(String... args) {
 		File file = new File("listIOTest" + IOHelper.EBS_EXTENSION);
 
-		EBList<String, DataTypeString> list1 = new EBList<>(new DataTypeString());
+		EBList<String> list1 = new EBList<>(new DataTypeString());
 		list1.addWrapped("Hello, ");
 		list1.addWrapped("World!");
 		IOHelper.writeEBList(list1, file);
 
-		EBList<String, DataTypeString> list2 = IOHelper.readEBList(file);
+		EBList<String> list2 = IOHelper.readEBList(file);
 		for (String s : list2.values())
 			System.out.print(s);
 		System.out.println();
