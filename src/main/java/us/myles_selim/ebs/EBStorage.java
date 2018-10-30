@@ -15,6 +15,7 @@ import us.myles_selim.ebs.data_types.DataTypeByte;
 import us.myles_selim.ebs.data_types.DataTypeByteArray;
 import us.myles_selim.ebs.data_types.DataTypeCharacter;
 import us.myles_selim.ebs.data_types.DataTypeDouble;
+import us.myles_selim.ebs.data_types.DataTypeEBList;
 import us.myles_selim.ebs.data_types.DataTypeEBStorage;
 import us.myles_selim.ebs.data_types.DataTypeFloat;
 import us.myles_selim.ebs.data_types.DataTypeIntArray;
@@ -44,6 +45,7 @@ public class EBStorage {
 		registerType(new DataTypeByteArray()); // 9
 		registerType(new DataTypeEBStorage()); // 10
 		registerType(new DataTypeIntArray()); // 11
+		registerType(new DataTypeEBList()); // 12
 		return this;
 	}
 
@@ -83,11 +85,12 @@ public class EBStorage {
 		return next;
 	}
 
-	public void set(String name, Object value) {
+	public void set(String name, Object value) throws IllegalArgumentException {
 		if (acceptsValue(value)) {
 			data.put(name, getDataType(value));
 			callOnWrite();
-		}
+		} else
+			throw new IllegalArgumentException("DataType for " + value + " not registered");
 	}
 
 	public Object get(String name) {
