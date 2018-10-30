@@ -13,20 +13,21 @@ import java.util.function.UnaryOperator;
 
 import us.myles_selim.ebs.callbacks.OnWriteCallback;
 
-public class EBList<W, T extends DataType<W>> extends ArrayList<T> {
+public class EBList<W> extends ArrayList<DataType<W>> {
 
 	private static final long serialVersionUID = -5713554517110763629L;
-	private final T type;
+	private final DataType<W> type;
 
-	public EBList(T type) {
+	public EBList(DataType<W> type) {
 		this.type = type;
 	}
 
 	public boolean addWrapped(W wrapped) {
-		T inst;
+		DataType<W> inst;
 		try {
 			@SuppressWarnings("unchecked")
-			Constructor<T> construct = (Constructor<T>) type.getClass().getConstructor();
+			Constructor<DataType<W>> construct = (Constructor<DataType<W>>) type.getClass()
+					.getConstructor();
 			inst = construct.newInstance();
 			inst.setValue(wrapped);
 		} catch (NoSuchMethodException | SecurityException | InstantiationException
@@ -37,28 +38,28 @@ public class EBList<W, T extends DataType<W>> extends ArrayList<T> {
 	}
 
 	@Override
-	public T set(int index, T element) {
-		T val = super.set(index, element);
+	public DataType<W> set(int index, DataType<W> element) {
+		DataType<W> val = super.set(index, element);
 		this.callOnWrite();
 		return val;
 	}
 
 	@Override
-	public boolean add(T e) {
+	public boolean add(DataType<W> e) {
 		boolean val = super.add(e);
 		this.callOnWrite();
 		return val;
 	}
 
 	@Override
-	public void add(int index, T element) {
+	public void add(int index, DataType<W> element) {
 		super.add(index, element);
 		this.callOnWrite();
 	}
 
 	@Override
-	public T remove(int index) {
-		T val = super.remove(index);
+	public DataType<W> remove(int index) {
+		DataType<W> val = super.remove(index);
 		this.callOnWrite();
 		return val;
 	}
@@ -77,14 +78,14 @@ public class EBList<W, T extends DataType<W>> extends ArrayList<T> {
 	}
 
 	@Override
-	public boolean addAll(Collection<? extends T> c) {
+	public boolean addAll(Collection<? extends DataType<W>> c) {
 		boolean val = super.addAll(c);
 		this.callOnWrite();
 		return val;
 	}
 
 	@Override
-	public boolean addAll(int index, Collection<? extends T> c) {
+	public boolean addAll(int index, Collection<? extends DataType<W>> c) {
 		boolean val = super.addAll(index, c);
 		this.callOnWrite();
 		return val;
@@ -104,20 +105,20 @@ public class EBList<W, T extends DataType<W>> extends ArrayList<T> {
 	}
 
 	@Override
-	public boolean removeIf(Predicate<? super T> filter) {
+	public boolean removeIf(Predicate<? super DataType<W>> filter) {
 		boolean val = super.removeIf(filter);
 		this.callOnWrite();
 		return val;
 	}
 
 	@Override
-	public void replaceAll(UnaryOperator<T> operator) {
+	public void replaceAll(UnaryOperator<DataType<W>> operator) {
 		super.replaceAll(operator);
 		this.callOnWrite();
 	}
 
 	@Override
-	public void sort(Comparator<? super T> c) {
+	public void sort(Comparator<? super DataType<W>> c) {
 		super.sort(c);
 		this.callOnWrite();
 	}
@@ -128,7 +129,7 @@ public class EBList<W, T extends DataType<W>> extends ArrayList<T> {
 	}
 
 	public boolean containsWrapped(Object o) {
-		for (T t : this)
+		for (DataType<W> t : this)
 			if (t == o || (t != null && t.getValue().equals(o)))
 				return true;
 		return false;
@@ -151,7 +152,7 @@ public class EBList<W, T extends DataType<W>> extends ArrayList<T> {
 
 	public List<W> values() {
 		List<W> vals = new LinkedList<>();
-		for (T t : this)
+		for (DataType<W> t : this)
 			vals.add(t.getValue());
 		return Collections.unmodifiableList(vals);
 	}
@@ -160,7 +161,7 @@ public class EBList<W, T extends DataType<W>> extends ArrayList<T> {
 		Storage storage = new Storage();
 		storage.writeString(type.getClass().getName());
 		storage.writeInt(this.size());
-		for (T t : this) {
+		for (DataType<W> t : this) {
 			storage.setLengthMarker();
 			t.toBytes(storage);
 			storage.writeLengthMarker();
@@ -175,27 +176,27 @@ public class EBList<W, T extends DataType<W>> extends ArrayList<T> {
 			this.onWriteCallback.onWrite();
 	}
 
-	public EBList<W, T> setOnWriteCallback(OnWriteCallback onWrite) {
+	public EBList<W> setOnWriteCallback(OnWriteCallback onWrite) {
 		this.onWriteCallback = onWrite;
 		return this;
 	}
 
-	public static <W, T extends DataType<W>> EBList<W, T> deserialize(byte[] data) {
+	public static <W> EBList<W> deserialize(byte[] data) {
 		Storage storage = new Storage(data);
 		String typeName = storage.readString();
 		int numValues = storage.readInt();
 		try {
 			@SuppressWarnings("unchecked")
-			Class<T> type = (Class<T>) Class.forName(typeName);
-			Constructor<T> construct = type.getConstructor();
-			T typeInstance = construct.newInstance();
-			EBList<W, T> list = new EBList<>(typeInstance);
+			Class<DataType<W>> type = (Class<DataType<W>>) Class.forName(typeName);
+			Constructor<DataType<W>> construct = type.getConstructor();
+			DataType<W> typeInstance = construct.newInstance();
+			EBList<W> list = new EBList<>(typeInstance);
 			for (int i = 0; i < numValues; i++) {
 				if (storage.getVersion() > 0) {
 					int length = storage.readInt();
 					storage.setReadDistance(length);
 				}
-				T newInstance = construct.newInstance();
+				DataType<W> newInstance = construct.newInstance();
 				newInstance.fromBytes(storage);
 				if (storage.getVersion() > 0)
 					storage.clearReadDistance();
