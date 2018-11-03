@@ -10,11 +10,29 @@ public class IOHelper {
 
 	public static final String EBS_EXTENSION = ".ebs";
 	public static final String EBS_LIST_EXTENSION = ".ebl";
+	/**
+	 * @deprecated Use EBS_FILE_FILTER
+	 */
+	@Deprecated
 	public static final FilenameFilter FILE_FILTER = new FilenameFilter() {
 
 		@Override
 		public boolean accept(File dir, String name) {
 			return name.endsWith(IOHelper.EBS_EXTENSION);
+		}
+	};
+	public static final FilenameFilter EBS_FILE_FILTER = new FilenameFilter() {
+
+		@Override
+		public boolean accept(File dir, String name) {
+			return name.endsWith(IOHelper.EBS_EXTENSION);
+		}
+	};
+	public static final FilenameFilter EBS_LIST_FILE_FILTER = new FilenameFilter() {
+
+		@Override
+		public boolean accept(File dir, String name) {
+			return name.endsWith(IOHelper.EBS_LIST_EXTENSION);
 		}
 	};
 
