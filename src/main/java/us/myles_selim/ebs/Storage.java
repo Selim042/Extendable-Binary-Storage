@@ -59,10 +59,7 @@ public class Storage {
 	}
 
 	public boolean readBoolean() {
-		if (readPos > data.size() || (maxReadMarker != -1 && readPos > maxReadMarker))
-			return false;
-		byte b = data.get(readPos++);
-		if (b == 0)
+		if (readByte() == 0)
 			return false;
 		return true;
 	}
@@ -72,7 +69,7 @@ public class Storage {
 	}
 
 	public byte readByte() {
-		if (readPos > data.size() || (maxReadMarker != -1 && readPos > maxReadMarker))
+		if (readPos + 1 > data.size() || (maxReadMarker != -1 && readPos + 1 > maxReadMarker))
 			return 0;
 		return data.get(readPos++);
 	}
