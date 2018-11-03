@@ -93,6 +93,11 @@ public class EBStorage {
 			throw new IllegalArgumentException("DataType for " + value + " not registered");
 	}
 
+	public void clearKey(String name) {
+		data.remove(name);
+		callOnWrite();
+	}
+
 	public Object get(String name) {
 		if (data.containsKey(name))
 			return data.get(name).getValue();

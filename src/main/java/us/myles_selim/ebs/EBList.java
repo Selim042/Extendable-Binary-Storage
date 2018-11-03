@@ -71,6 +71,15 @@ public class EBList<W> extends ArrayList<DataType<W>> {
 		return val;
 	}
 
+	public boolean removeWrapped(Object o) {
+		for (DataType<?> d : this)
+			if (d != null && d.getValue().equals(o)) {
+				this.remove(d);
+				return true;
+			}
+		return false;
+	}
+
 	@Override
 	public void clear() {
 		super.clear();
@@ -130,7 +139,7 @@ public class EBList<W> extends ArrayList<DataType<W>> {
 
 	public boolean containsWrapped(Object o) {
 		for (DataType<W> t : this)
-			if (t == o || (t != null && t.getValue().equals(o)))
+			if (t != null && t.getValue().equals(o))
 				return true;
 		return false;
 	}
