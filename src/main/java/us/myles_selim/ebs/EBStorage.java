@@ -56,6 +56,9 @@ public class EBStorage {
 			throw new IllegalArgumentException(
 					"data types must have a public default constructor: " + dataType.getClass());
 		}
+		for (Entry<Integer, DataType<?>> e : dataTypes.entrySet())
+			if (e.getValue().getClass().equals(dataType.getClass()))
+				return this;
 		if (dataTypes.containsKey(id))
 			throw new IllegalArgumentException("data type with id " + id + " is already registered: "
 					+ dataTypes.get(id).getClass().getName());
@@ -148,7 +151,7 @@ public class EBStorage {
 
 	private void callOnWrite() {
 		if (this.onWriteCallback != null)
-			this.onWriteCallback.onWrite();
+			this.onWriteCallback.onWriteEBS(this);
 	}
 
 	public EBStorage setOnWriteCallback(OnWriteCallback onWrite) {

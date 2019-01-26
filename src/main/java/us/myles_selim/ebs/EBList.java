@@ -182,7 +182,7 @@ public class EBList<W> extends ArrayList<DataType<W>> {
 
 	private void callOnWrite() {
 		if (this.onWriteCallback != null)
-			this.onWriteCallback.onWrite();
+			this.onWriteCallback.onWriteEBL(this);
 	}
 
 	public EBList<W> setOnWriteCallback(OnWriteCallback onWrite) {
