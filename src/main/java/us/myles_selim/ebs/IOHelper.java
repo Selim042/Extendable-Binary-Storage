@@ -44,7 +44,7 @@ public class IOHelper {
 	 * @return true if successfully written, false if otherwise
 	 */
 	public static boolean writeEBStorage(EBStorage storage, File file) {
-		file.mkdirs();
+		file.getParentFile().mkdirs();
 		byte[] serializedWrite = storage.serialize();
 		try {
 			FileOutputStream out = new FileOutputStream(file);
@@ -76,7 +76,7 @@ public class IOHelper {
 	}
 
 	public static boolean writeEBList(EBList<?> list, File file) {
-		file.mkdirs();
+		file.getParentFile().mkdirs();
 		byte[] ser = list.serialize();
 		try {
 			FileOutputStream out = new FileOutputStream(file);
