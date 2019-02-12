@@ -75,6 +75,13 @@ public class IOHelper {
 		return EBStorage.deserialize(serializedRead);
 	}
 
+	/**
+	 * Writes the given EBList to the given File
+	 * 
+	 * @param storage
+	 * @param file
+	 * @return true if successfully written, false if otherwise
+	 */
 	public static boolean writeEBList(EBList<?> list, File file) {
 		file.getParentFile().mkdirs();
 		byte[] ser = list.serialize();
@@ -88,6 +95,12 @@ public class IOHelper {
 		}
 	}
 
+	/**
+	 * Reads a EBList from a given File
+	 * 
+	 * @param file
+	 * @return the contents of the file if successfully read, null if otherwise
+	 */
 	public static <W> EBList<W> readEBList(File file) {
 		byte[] ser = null;
 		try {
