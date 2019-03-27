@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 
+import us.myles_selim.ebs.callbacks.ClassNotFoundCallback;
 import us.myles_selim.ebs.callbacks.OnWriteCallback;
 
 public class EBList<W> extends ArrayList<DataType<W>> {
@@ -191,12 +192,28 @@ public class EBList<W> extends ArrayList<DataType<W>> {
 	}
 
 	public static <W> EBList<W> deserialize(byte[] data) {
+		return deserialize(data, null);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <W> EBList<W> deserialize(byte[] data, ClassNotFoundCallback classNotFound) {
 		Storage storage = new Storage(data);
 		String typeName = storage.readString();
 		int numValues = storage.readInt();
+		Class<DataType<W>> type;
 		try {
-			@SuppressWarnings("unchecked")
-			Class<DataType<W>> type = (Class<DataType<W>>) Class.forName(typeName);
+			type = (Class<DataType<W>>) Class.forName(typeName);
+		} catch (ClassNotFoundException e) {
+			try {
+				if (classNotFound == null)
+					throw new ClassNotFoundException();
+				type = (Class<DataType<W>>) Class.forName(classNotFound.getNewPath(typeName));
+			} catch (ClassNotFoundException e2) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+		try {
 			Constructor<DataType<W>> construct = type.getConstructor();
 			DataType<W> typeInstance = construct.newInstance();
 			EBList<W> list = new EBList<>(typeInstance);
@@ -212,9 +229,8 @@ public class EBList<W> extends ArrayList<DataType<W>> {
 				list.add(newInstance);
 			}
 			return list;
-		} catch (ClassNotFoundException | NoSuchMethodException | SecurityException
-				| InstantiationException | IllegalAccessException | IllegalArgumentException
-				| InvocationTargetException e) {
+		} catch (NoSuchMethodException | SecurityException | InstantiationException
+				| IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			e.printStackTrace();
 			return null;
 		}

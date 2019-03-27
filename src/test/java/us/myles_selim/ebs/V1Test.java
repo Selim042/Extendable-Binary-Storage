@@ -2,6 +2,7 @@ package us.myles_selim.ebs;
 
 import us.myles_selim.ebs.data_types.DataTypeString;
 
+@TestClass
 public class V1Test {
 
 	public static void main(String... args) {

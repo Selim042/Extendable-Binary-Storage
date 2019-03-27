@@ -4,6 +4,7 @@ import java.io.File;
 
 import us.myles_selim.ebs.data_types.DataTypeString;
 
+@TestClass
 public class EBListTest {
 
 	public static void main(String... args) {

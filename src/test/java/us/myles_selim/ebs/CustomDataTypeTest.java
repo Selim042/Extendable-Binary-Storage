@@ -1,5 +1,10 @@
 package us.myles_selim.ebs;
 
+import us.myles_selim.ebs.DataType;
+import us.myles_selim.ebs.EBStorage;
+import us.myles_selim.ebs.Storage;
+
+@TestClass
 class CustomDataTypeTest {
 
 	private static class CustomData {

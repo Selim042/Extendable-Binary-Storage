@@ -1,5 +1,6 @@
 package us.myles_selim.ebs;
 
+@TestClass
 public class V2BoundaryTest {
 
 	public static void main(String... args) {
@@ -9,6 +10,7 @@ public class V2BoundaryTest {
 
 		EBStorage ebs1 = new EBStorage().registerType(new DataTypeTest());
 		ebs1.set("t", "s");
+		ebs1.set("2", "b");
 		byte[] ser = ebs1.serialize();
 
 		EBStorage ebs2 = EBStorage.deserialize(ser);
@@ -39,7 +41,7 @@ public class V2BoundaryTest {
 		public void toBytes(Storage stor) {
 			stor.writeInt(1);
 			stor.writeBoolean(true);
-			stor.writeLong(123412341234L);
+			stor.writeLong(1L);
 			stor.writeInt(2);
 			// stor.writeInt(3);
 			// stor.writeBoolean(false);

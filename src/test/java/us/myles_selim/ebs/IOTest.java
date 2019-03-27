@@ -2,6 +2,7 @@ package us.myles_selim.ebs;
 
 import java.io.File;
 
+@TestClass
 public class IOTest {
 
 	public static void main(String... args) {

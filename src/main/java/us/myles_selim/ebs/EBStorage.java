@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+import us.myles_selim.ebs.callbacks.ClassNotFoundCallback;
 import us.myles_selim.ebs.callbacks.OnWriteCallback;
 import us.myles_selim.ebs.data_types.DataTypeBoolean;
 import us.myles_selim.ebs.data_types.DataTypeByte;
@@ -160,6 +161,10 @@ public class EBStorage {
 	}
 
 	public static EBStorage deserialize(byte[] data) {
+		return deserialize(data, null);
+	}
+
+	public static EBStorage deserialize(byte[] data, ClassNotFoundCallback classNotFound) {
 		if (data == null)
 			return new EBStorage();
 		boolean valid = true;
@@ -167,14 +172,27 @@ public class EBStorage {
 		Storage storage = new Storage(data);
 		int numTypes = storage.readInt();
 		for (int i = 0; i < numTypes; i++) {
+			int id = storage.readInt();
+			String className = storage.readString();
+			Class<?> clazz;
 			try {
-				int id = storage.readInt();
-				Class<?> clazz = Class.forName(storage.readString());
+				clazz = Class.forName(className);
+			} catch (ClassNotFoundException e) {
+				try {
+					if (classNotFound == null)
+						throw new ClassNotFoundException();
+					clazz = Class.forName(classNotFound.getNewPath(className));
+				} catch (ClassNotFoundException e2) {
+					e.printStackTrace();
+					valid = false;
+					break;
+				}
+			}
+			try {
 				Constructor<?> construct = clazz.getConstructor();
 				ebs.registerType(id, (DataType<?>) construct.newInstance());
-			} catch (ClassNotFoundException | NoSuchMethodException | SecurityException
-					| InstantiationException | IllegalAccessException | IllegalArgumentException
-					| InvocationTargetException e) {
+			} catch (NoSuchMethodException | SecurityException | InstantiationException
+					| IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				e.printStackTrace();
 				valid = false;
 				break;

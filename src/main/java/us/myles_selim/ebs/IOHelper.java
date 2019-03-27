@@ -6,6 +6,8 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 
+import us.myles_selim.ebs.callbacks.ClassNotFoundCallback;
+
 public class IOHelper {
 
 	public static final String EBS_EXTENSION = ".ebs";
@@ -39,12 +41,12 @@ public class IOHelper {
 	/**
 	 * Writes the given EBStorage to the given File
 	 * 
-	 * @param storage
-	 * @param file
+	 * @param
 	 * @return true if successfully written, false if otherwise
 	 */
 	public static boolean writeEBStorage(EBStorage storage, File file) {
-		file.getParentFile().mkdirs();
+		if (file.getParentFile() != null)
+			file.getParentFile().mkdirs();
 		byte[] serializedWrite = storage.serialize();
 		try {
 			FileOutputStream out = new FileOutputStream(file);
@@ -59,10 +61,20 @@ public class IOHelper {
 	/**
 	 * Reads a EBStorage from a given File
 	 * 
-	 * @param file
+	 * @param
 	 * @return the contents of the file if successfully read, null if otherwise
 	 */
 	public static EBStorage readEBStorage(File file) {
+		return readEBStorage(file, null);
+	}
+
+	/**
+	 * Reads a EBStorage from a given File
+	 * 
+	 * @param
+	 * @return the contents of the file if successfully read, null if otherwise
+	 */
+	public static EBStorage readEBStorage(File file, ClassNotFoundCallback classNotFound) {
 		byte[] serializedRead = null;
 		try {
 			FileInputStream in = new FileInputStream(file);
@@ -72,18 +84,18 @@ public class IOHelper {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return EBStorage.deserialize(serializedRead);
+		return EBStorage.deserialize(serializedRead, classNotFound);
 	}
 
 	/**
 	 * Writes the given EBList to the given File
 	 * 
-	 * @param storage
-	 * @param file
+	 * @param
 	 * @return true if successfully written, false if otherwise
 	 */
 	public static boolean writeEBList(EBList<?> list, File file) {
-		file.getParentFile().mkdirs();
+		if (file.getParentFile() != null)
+			file.getParentFile().mkdirs();
 		byte[] ser = list.serialize();
 		try {
 			FileOutputStream out = new FileOutputStream(file);
@@ -98,10 +110,20 @@ public class IOHelper {
 	/**
 	 * Reads a EBList from a given File
 	 * 
-	 * @param file
+	 * @param
 	 * @return the contents of the file if successfully read, null if otherwise
 	 */
 	public static <W> EBList<W> readEBList(File file) {
+		return readEBList(file, null);
+	}
+
+	/**
+	 * Reads a EBList from a given File
+	 * 
+	 * @param
+	 * @return the contents of the file if successfully read, null if otherwise
+	 */
+	public static <W> EBList<W> readEBList(File file, ClassNotFoundCallback classNotFound) {
 		byte[] ser = null;
 		try {
 			FileInputStream in = new FileInputStream(file);
@@ -109,7 +131,7 @@ public class IOHelper {
 			in.read(ser);
 			in.close();
 		} catch (IOException e) {}
-		return EBList.deserialize(ser);
+		return EBList.deserialize(ser, classNotFound);
 	}
 
 }
