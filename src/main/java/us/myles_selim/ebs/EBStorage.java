@@ -27,11 +27,21 @@ import us.myles_selim.ebs.data_types.DataTypeString;
 
 public class EBStorage {
 
-	private final Map<Integer, DataType<?>> dataTypes = new HashMap<>();
-	private final Map<String, DataType<?>> data = new ConcurrentHashMap<>();
-	private int next = 0;
+	private final Map<Integer, DataType<?>> dataTypes;
+	private final Map<String, DataType<?>> data;
+	private int next;
 
-	public EBStorage() {}
+	public EBStorage() {
+		this.dataTypes = new HashMap<>();
+		this.data = new ConcurrentHashMap<>();
+		this.next = 0;
+	}
+
+	public EBStorage(EBStorage ebs) {
+		this.dataTypes = new HashMap<>(ebs.dataTypes);
+		this.data = new ConcurrentHashMap<>(ebs.data);
+		this.next = ebs.next;
+	}
 
 	public EBStorage registerPrimitives() {
 		registerType(new DataTypeBoolean()); // 0

@@ -23,6 +23,11 @@ public class EBList<W> extends ArrayList<DataType<W>> {
 		this.type = type;
 	}
 
+	public EBList(EBList<W> ebl) {
+		super(ebl);
+		this.type = ebl.type;
+	}
+
 	public boolean addWrapped(W wrapped) {
 		DataType<W> inst;
 		try {
