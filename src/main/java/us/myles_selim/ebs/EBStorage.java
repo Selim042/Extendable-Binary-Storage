@@ -242,7 +242,7 @@ public class EBStorage {
 				}
 			}
 		}
-		return null;
+		throw new IllegalArgumentException("DataType for " + val.getClass().getName() + " not found");
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
