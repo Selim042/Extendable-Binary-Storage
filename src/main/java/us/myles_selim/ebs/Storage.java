@@ -158,10 +158,10 @@ public class Storage {
 		int length = readInt();
 		if (length == 0)
 			return null;
-		String v = "";
+		StringBuilder v = new StringBuilder();
 		for (int i = 0; i < length; i++)
-			v += readChar();
-		return v;
+			v.append(readChar());
+		return v.toString();
 	}
 
 	public void writeByteArray(byte[] val) {
