@@ -196,6 +196,10 @@ public class EBList<W> extends ArrayList<DataType<W>> {
 		return this;
 	}
 
+	public void markDirty() {
+		callOnWrite();
+	}
+
 	public static <W> EBList<W> deserialize(byte[] data) {
 		return deserialize(data, null);
 	}

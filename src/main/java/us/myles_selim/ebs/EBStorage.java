@@ -170,6 +170,10 @@ public class EBStorage {
 		return this;
 	}
 
+	public void markDirty() {
+		callOnWrite();
+	}
+
 	public static EBStorage deserialize(byte[] data) {
 		return deserialize(data, null);
 	}
