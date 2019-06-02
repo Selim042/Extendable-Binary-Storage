@@ -19,14 +19,14 @@ public class DataTypeString extends DataType<String> {
 	}
 
 	@Override
-	public void setValue(String value) {
+	protected void setValueInternal(String value) {
 		this.value = value;
 	}
 
 	@Override
 	protected void setValueObject(Object value) {
 		if (value instanceof String)
-			this.setValue((String) value);
+			this.setValueInternal((String) value);
 	}
 
 	@Override

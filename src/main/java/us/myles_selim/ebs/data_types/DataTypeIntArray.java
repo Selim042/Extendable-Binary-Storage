@@ -19,7 +19,7 @@ public class DataTypeIntArray extends DataType<int[]> {
 	}
 
 	@Override
-	public void setValue(int[] value) {
+	protected void setValueInternal(int[] value) {
 		this.value = value;
 	}
 

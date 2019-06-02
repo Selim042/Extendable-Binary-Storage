@@ -19,7 +19,7 @@ public class DataTypeCharacter extends DataType<Character> {
 	}
 
 	@Override
-	public void setValue(Character value) {
+	protected void setValueInternal(Character value) {
 		this.value = value;
 	}
 

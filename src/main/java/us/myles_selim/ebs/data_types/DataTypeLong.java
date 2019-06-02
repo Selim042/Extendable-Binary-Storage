@@ -19,7 +19,7 @@ public class DataTypeLong extends DataType<Long> {
 	}
 
 	@Override
-	public void setValue(Long value) {
+	protected void setValueInternal(Long value) {
 		this.value = value;
 	}
 

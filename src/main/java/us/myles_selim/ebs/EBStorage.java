@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import us.myles_selim.ebs.callbacks.ClassNotFoundCallback;
 import us.myles_selim.ebs.callbacks.OnWriteCallback;
+import us.myles_selim.ebs.callbacks.ParentFlushCallback;
 import us.myles_selim.ebs.data_types.DataTypeBoolean;
 import us.myles_selim.ebs.data_types.DataTypeByte;
 import us.myles_selim.ebs.data_types.DataTypeByteArray;
@@ -25,7 +26,7 @@ import us.myles_selim.ebs.data_types.DataTypeLong;
 import us.myles_selim.ebs.data_types.DataTypeShort;
 import us.myles_selim.ebs.data_types.DataTypeString;
 
-public class EBStorage {
+public class EBStorage implements IDataTypeHolder<EBStorage> {
 
 	private final Map<Integer, DataType<?>> dataTypes;
 	private final Map<String, DataType<?>> data;
@@ -137,6 +138,7 @@ public class EBStorage {
 		return false;
 	}
 
+	@Override
 	public byte[] serialize() {
 		Storage storage = new Storage();
 		storage.writeInt(dataTypes.size());
@@ -165,12 +167,14 @@ public class EBStorage {
 			this.onWriteCallback.onWriteEBS(this);
 	}
 
+	@Override
 	public EBStorage setOnWriteCallback(OnWriteCallback onWrite) {
 		this.onWriteCallback = onWrite;
 		return this;
 	}
 
-	public void markDirty() {
+	@Override
+	public void flush() {
 		callOnWrite();
 	}
 
@@ -228,6 +232,12 @@ public class EBStorage {
 			newType.fromBytes(storage);
 			if (storage.getVersion() > 0)
 				storage.clearReadDistance();
+			if (newType instanceof DataTypeEBStorage) {
+				DataTypeEBStorage type = (DataTypeEBStorage) newType;
+				if (type.getValue() != null)
+					type.getValue().setOnWriteCallback(new ParentFlushCallback(ebs));
+			}
+			newType.setParent(ebs);
 		}
 		return valid ? ebs : null;
 	}
@@ -239,6 +249,7 @@ public class EBStorage {
 				try {
 					DataType<?> newData = e.getValue().getClass().getConstructor().newInstance();
 					newData.setValueObject(val);
+					newData.setParent(this);
 					return (DataType<T>) newData;
 				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 						| InvocationTargetException | NoSuchMethodException | SecurityException e1) {

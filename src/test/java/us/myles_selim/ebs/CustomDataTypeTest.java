@@ -29,7 +29,7 @@ class CustomDataTypeTest {
 		}
 
 		@Override
-		public void setValue(CustomData value) {
+		protected void setValueInternal(CustomData value) {
 			this.data = value;
 		}
 

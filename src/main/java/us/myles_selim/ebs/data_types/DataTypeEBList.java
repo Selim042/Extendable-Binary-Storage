@@ -3,6 +3,7 @@ package us.myles_selim.ebs.data_types;
 import us.myles_selim.ebs.DataType;
 import us.myles_selim.ebs.EBList;
 import us.myles_selim.ebs.Storage;
+import us.myles_selim.ebs.callbacks.ParentFlushCallback;
 
 public class DataTypeEBList extends DataType<EBList<?>> {
 
@@ -14,14 +15,17 @@ public class DataTypeEBList extends DataType<EBList<?>> {
 	}
 
 	@Override
-	public void setValue(EBList<?> value) {
+	protected void setValueInternal(EBList<?> value) {
 		this.value = value;
 	}
 
 	@Override
 	protected void setValueObject(Object value) {
-		if (this.acceptsValue(value))
+		if (this.acceptsValue(value)) {
 			this.value = (EBList<?>) value;
+			if (this.value != null)
+				this.value.setOnWriteCallback(new ParentFlushCallback(this.value));
+		}
 	}
 
 	@Override

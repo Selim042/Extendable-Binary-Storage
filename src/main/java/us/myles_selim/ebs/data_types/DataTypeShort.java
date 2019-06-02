@@ -19,7 +19,7 @@ public class DataTypeShort extends DataType<Short> {
 	}
 
 	@Override
-	public void setValue(Short value) {
+	protected void setValueInternal(Short value) {
 		this.value = value;
 	}
 

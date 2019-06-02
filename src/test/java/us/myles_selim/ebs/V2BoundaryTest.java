@@ -27,7 +27,7 @@ public class V2BoundaryTest {
 		}
 
 		@Override
-		public void setValue(Integer value) {}
+		protected void setValueInternal(Integer value) {}
 
 		@Override
 		protected void setValueObject(Object value) {}

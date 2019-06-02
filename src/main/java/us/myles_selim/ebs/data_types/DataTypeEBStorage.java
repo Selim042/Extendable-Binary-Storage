@@ -3,6 +3,7 @@ package us.myles_selim.ebs.data_types;
 import us.myles_selim.ebs.DataType;
 import us.myles_selim.ebs.EBStorage;
 import us.myles_selim.ebs.Storage;
+import us.myles_selim.ebs.callbacks.ParentFlushCallback;
 
 public class DataTypeEBStorage extends DataType<EBStorage> {
 
@@ -14,14 +15,17 @@ public class DataTypeEBStorage extends DataType<EBStorage> {
 	}
 
 	@Override
-	public void setValue(EBStorage value) {
+	protected void setValueInternal(EBStorage value) {
 		this.value = value;
 	}
 
 	@Override
 	protected void setValueObject(Object value) {
-		if (this.acceptsValue(value))
+		if (this.acceptsValue(value)) {
 			this.value = (EBStorage) value;
+			if (this.value != null)
+				this.value.setOnWriteCallback(new ParentFlushCallback(this.value));
+		}
 	}
 
 	@Override

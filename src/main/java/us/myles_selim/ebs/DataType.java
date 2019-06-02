@@ -2,9 +2,25 @@ package us.myles_selim.ebs;
 
 public abstract class DataType<V> {
 
+	private IDataTypeHolder<?> parent;
+
+	public final void setParent(IDataTypeHolder<?> parent) {
+		this.parent = parent;
+	}
+
+	public final IDataTypeHolder<?> getParent() {
+		return parent;
+	}
+
 	public abstract V getValue();
 
-	public abstract void setValue(V value);
+	public final void setValue(V value) {
+		setValueInternal(value);
+		if (parent != null && parent != getValue())
+			parent.flush();
+	}
+
+	protected abstract void setValueInternal(V value);
 
 	protected abstract void setValueObject(Object value);
 

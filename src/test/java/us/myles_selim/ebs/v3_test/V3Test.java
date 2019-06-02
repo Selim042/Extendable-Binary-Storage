@@ -27,7 +27,7 @@ public class V3Test {
 		}
 
 		@Override
-		public void setValue(V3TestData value) {
+		protected void setValueInternal(V3TestData value) {
 			this.data = value;
 		}
 

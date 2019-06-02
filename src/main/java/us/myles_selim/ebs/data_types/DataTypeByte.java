@@ -19,7 +19,7 @@ public class DataTypeByte extends DataType<Byte> {
 	}
 
 	@Override
-	public void setValue(Byte value) {
+	protected void setValueInternal(Byte value) {
 		this.value = value;
 	}
 

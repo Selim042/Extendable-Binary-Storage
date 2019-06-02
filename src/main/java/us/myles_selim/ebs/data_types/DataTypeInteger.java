@@ -19,7 +19,7 @@ public class DataTypeInteger extends DataType<Integer> {
 	}
 
 	@Override
-	public void setValue(Integer value) {
+	protected void setValueInternal(Integer value) {
 		this.value = value;
 	}
 

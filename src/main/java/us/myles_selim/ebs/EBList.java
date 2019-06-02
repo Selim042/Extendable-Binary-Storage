@@ -13,8 +13,10 @@ import java.util.function.UnaryOperator;
 
 import us.myles_selim.ebs.callbacks.ClassNotFoundCallback;
 import us.myles_selim.ebs.callbacks.OnWriteCallback;
+import us.myles_selim.ebs.callbacks.ParentFlushCallback;
+import us.myles_selim.ebs.data_types.DataTypeEBStorage;
 
-public class EBList<W> extends ArrayList<DataType<W>> {
+public class EBList<W> extends ArrayList<DataType<W>> implements IDataTypeHolder<EBList<W>> {
 
 	private static final long serialVersionUID = -5713554517110763629L;
 	private final DataType<W> type;
@@ -35,7 +37,7 @@ public class EBList<W> extends ArrayList<DataType<W>> {
 			Constructor<DataType<W>> construct = (Constructor<DataType<W>>) type.getClass()
 					.getConstructor();
 			inst = construct.newInstance();
-			inst.setValue(wrapped);
+			inst.setValueInternal(wrapped);
 		} catch (NoSuchMethodException | SecurityException | InstantiationException
 				| IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			return false;
@@ -53,6 +55,7 @@ public class EBList<W> extends ArrayList<DataType<W>> {
 	@Override
 	public boolean add(DataType<W> e) {
 		boolean val = super.add(e);
+		e.setParent(this);
 		this.callOnWrite();
 		return val;
 	}
@@ -172,6 +175,7 @@ public class EBList<W> extends ArrayList<DataType<W>> {
 		return Collections.unmodifiableList(vals);
 	}
 
+	@Override
 	public byte[] serialize() {
 		Storage storage = new Storage();
 		storage.writeString(type.getClass().getName());
@@ -191,12 +195,14 @@ public class EBList<W> extends ArrayList<DataType<W>> {
 			this.onWriteCallback.onWriteEBL(this);
 	}
 
+	@Override
 	public EBList<W> setOnWriteCallback(OnWriteCallback onWrite) {
 		this.onWriteCallback = onWrite;
 		return this;
 	}
 
-	public void markDirty() {
+	@Override
+	public void flush() {
 		callOnWrite();
 	}
 
@@ -236,6 +242,12 @@ public class EBList<W> extends ArrayList<DataType<W>> {
 				if (storage.getVersion() > 0)
 					storage.clearReadDistance();
 				list.add(newInstance);
+				if (newInstance instanceof DataTypeEBStorage) {
+					DataTypeEBStorage dType = (DataTypeEBStorage) newInstance;
+					if (dType.getValue() != null)
+						dType.getValue().setOnWriteCallback(new ParentFlushCallback(list));
+				}
+				newInstance.setParent(list);
 			}
 			return list;
 		} catch (NoSuchMethodException | SecurityException | InstantiationException

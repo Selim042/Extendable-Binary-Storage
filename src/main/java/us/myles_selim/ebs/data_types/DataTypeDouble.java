@@ -19,7 +19,7 @@ public class DataTypeDouble extends DataType<Double> {
 	}
 
 	@Override
-	public void setValue(Double value) {
+	protected void setValueInternal(Double value) {
 		this.value = value;
 	}
 

@@ -19,7 +19,7 @@ public class DataTypeFloat extends DataType<Float> {
 	}
 
 	@Override
-	public void setValue(Float value) {
+	protected void setValueInternal(Float value) {
 		this.value = value;
 	}
 

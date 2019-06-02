@@ -19,7 +19,7 @@ public class DataTypeByteArray extends DataType<byte[]> {
 	}
 
 	@Override
-	public void setValue(byte[] value) {
+	protected void setValueInternal(byte[] value) {
 		this.value = value;
 	}
 

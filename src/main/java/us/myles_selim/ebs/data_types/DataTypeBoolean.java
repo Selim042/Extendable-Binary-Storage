@@ -19,7 +19,7 @@ public class DataTypeBoolean extends DataType<Boolean> {
 	}
 
 	@Override
-	public void setValue(Boolean value) {
+	protected void setValueInternal(Boolean value) {
 		this.value = value;
 	}
 
