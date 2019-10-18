@@ -6,4 +6,8 @@ public abstract class ClassNotFoundCallback {
 		return oldPath;
 	}
 
+	public boolean shouldJustDelete(String oldPath) {
+		return false;
+	}
+
 }
