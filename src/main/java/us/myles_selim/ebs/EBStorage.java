@@ -2,9 +2,11 @@ package us.myles_selim.ebs;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -188,6 +190,7 @@ public class EBStorage implements IDataTypeHolder<EBStorage> {
 		boolean valid = true;
 		EBStorage ebs = new EBStorage();
 		Storage storage = new Storage(data);
+		List<Integer> typesToDelete = new ArrayList<>();
 		int numTypes = storage.readInt();
 		for (int i = 0; i < numTypes; i++) {
 			int id = storage.readInt();
@@ -199,6 +202,10 @@ public class EBStorage implements IDataTypeHolder<EBStorage> {
 				try {
 					if (classNotFound == null)
 						throw new ClassNotFoundException();
+					if (classNotFound.shouldJustDelete(className)) {
+						typesToDelete.add(id);
+						continue;
+					}
 					clazz = Class.forName(classNotFound.getNewPath(className));
 				} catch (ClassNotFoundException e2) {
 					e.printStackTrace();
@@ -223,6 +230,8 @@ public class EBStorage implements IDataTypeHolder<EBStorage> {
 				storage.setReadDistance(length);
 			}
 			int id = storage.readInt();
+			if (typesToDelete.contains(id))
+				continue;
 			DataType<?> newType = getNewDataType(ebs.getType(id));
 			if (newType == null) {
 				valid = false;
