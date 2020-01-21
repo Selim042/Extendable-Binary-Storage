@@ -107,7 +107,8 @@ public class EBStorage implements IDataTypeHolder<EBStorage> {
 			data.put(name, getDataType(value));
 			callOnWrite();
 		} else
-			throw new IllegalArgumentException("DataType for " + value + " not registered");
+			throw new IllegalArgumentException(
+					"DataType for " + value + "(" + value.getClass().getName() + ") not registered");
 	}
 
 	public void clearKey(String name) {
